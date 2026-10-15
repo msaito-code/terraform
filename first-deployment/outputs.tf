@@ -9,3 +9,7 @@ output "vnet_id" {
 output "vm_private_ip" {
 	value	= azurerm_linux_virtual_machine.vm.private_ip_addresses[0]
 }
+
+output "vm_public_ip" {
+	value	= azurerm_public_ip.vm_pip.ip_address
+}

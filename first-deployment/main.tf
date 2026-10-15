@@ -44,7 +44,16 @@ resource "azurerm_network_interface" "vm_nic" {
 		name				= "Internal"
 		subnet_id			= azurerm_subnet.subnet.id
 		private_ip_address_allocation	= "Dynamic"
+		public_ip_address_id		= azurerm_public_ip.vm_pip.id
 	}
+}
+
+resource "azurerm_public_ip" "vm_pip" {
+	name			= "vm-${var.vm_location}-pip"
+	resource_group_name	= azurerm_resource_group.vm_rg.name
+	location		= var.vm_location
+	allocation_method	= "Static"
+	sku			= "Standard"
 }
 
 resource "azurerm_linux_virtual_machine" "vm" {
@@ -59,6 +68,13 @@ resource "azurerm_linux_virtual_machine" "vm" {
 		azurerm_network_interface.vm_nic.id
 	]
 
+	user_data =	base64encode(<<-EOF
+			#!/bin/bash
+			echo "Hello, World!" > index.html
+			nohup busybox httpd -f -p 8080 &
+			EOF
+			)
+
 	os_disk {
 		caching			= "ReadWrite"
 		storage_account_type	= "Standard_LRS"
@@ -70,4 +86,32 @@ resource "azurerm_linux_virtual_machine" "vm" {
 		sku		= "server"
 		version		= "latest"
 	}
+
+	depends_on = [
+		azurerm_public_ip.vm_pip
+	]
 }
+
+resource "azurerm_network_security_group" "nsg" {
+	name			= "${azurerm_virtual_network.vnet.name}-nsg"
+	location		= var.vm_location
+	resource_group_name	= azurerm_resource_group.vm_rg.name
+	
+	security_rule {
+		name				= "Allow-8080"
+		priority			= 100
+		direction			= "Inbound"
+		access				= "Allow"
+		protocol			= "Tcp"
+		source_port_range		= "*"
+		destination_port_range		= 8080
+		source_address_prefix		= "*"
+		destination_address_prefix 	= "*"
+	}
+}
+
+resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
+	subnet_id			= azurerm_subnet.subnet.id 
+	network_security_group_id	= azurerm_network_security_group.nsg.id
+}
+
