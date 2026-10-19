@@ -1,7 +1,7 @@
 variable "resource_group_location" {
 	description 	= "Location of the resources"
 	type		= string
-	default		= "eastus"
+	default		= "eastus2"
 }
 
 variable "resource_group_name_prefix" {
@@ -10,10 +10,10 @@ variable "resource_group_name_prefix" {
 	default		= "rg"
 }
 
-variable "availability_set_name_prefix" {
-	description	= "Prefix for the Linux Ubuntu Availability Set"
+variable "vms_be_name_prefix" {
+	description	= "Prefix for the Linux Ubuntu VMs in the backend pool of the Load Balancer"
 	type		= string
-	default		= "ubu-as"
+	default		= "ubu-be"
 }
 
 variable "vnet_available_address_spaces" {
