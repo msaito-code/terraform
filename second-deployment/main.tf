@@ -56,8 +56,9 @@ resource "azurerm_linux_virtual_machine_scale_set" "linux_ss" {
 	user_data = base64encode(
 			<<-EOF
 			#!/bin/bash
-			echo "Hello, World!" > index.html
-			nohup busybox http -f -p 80 &
+			mkdir -p /var/www/html
+			echo "Hello from $(hostname)!" > /var/www/html/index.html
+			nohup busybox httpd -f -p 80 -h /var/www/html &
 			EOF
 		    )
 
@@ -129,7 +130,7 @@ resource "azurerm_lb_probe" "http_probe" {
 	loadbalancer_id		= azurerm_lb.linux_fe_lb.id
 	protocol		= "Http"
 	port			= 80
-	request_path		= "/"
+	request_path		= "/index.html"
 }
 
 resource "azurerm_lb_rule" "http_rule" {
