@@ -18,15 +18,3 @@ variable "vnet_address_space" {
 		"10.1.0.0/16"
 	]
 }
-
-variable "admin_username" {
-	description	= "Admin username for the VMSS using environment keys"
-	type		= string
-	sensitive	= true
-}
-
-variable "admin_password" {
-	description	= "Admin password for the VMSS using environment keys"
-	type		= string
-	sensitive	= true
-}

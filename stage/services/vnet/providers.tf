@@ -10,7 +10,7 @@ terraform {
                 resource_group_name     = "rg-tfstate-cluster-st"
                 storage_account_name    = "tfstateclustersteastus"
                 container_name          = "tfstate-cluster-container"
-                key                     = "webserver_cluster.terraform.tfstate"
+                key                     = "cluster_vnet.terraform.tfstate"
         }
 }
 
