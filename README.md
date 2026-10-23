@@ -6,51 +6,83 @@
 
 Welcome! My name is **Matheus Saito**, an **Azure Cloud Security Engineer & Architect**. 
 
-This repository serves as a centralized portfolio showcasing my ability to design, deploy, and secure enterprise-grade Azure environments using **Terraform (Infrastructure as Code)**. 
+Terraform Up & Running on Azure
+This repository is a hands-on Infrastructure as Code (IaC) project in which I recreate and adapt the infrastructure examples from Terraform: Up & Running, 3rd Edition for Microsoft Azure.
 
-To make it easy for recruiters and hiring managers to review my work without jumping between multiple links, I have consolidated my key project demos into this single repository. Each subfolder represents an isolated, production-ready scenario with its own detailed documentation.
+The book primarily demonstrates Terraform concepts using ***Amazon Web Services (AWS)***. Rather than simply reproducing the examples, I translated their underlying architectural concepts to Azure and modified the implementations where the two cloud platforms differ.
 
----
+The goal of this repository is to demonstrate practical experience with Terraform, Azure infrastructure, remote state management, modular infrastructure, networking, security, and CI/CD, while documenting the architectural decisions and trade-offs involved in adapting infrastructure patterns between cloud providers.
 
-## 🏆 Certifications & Competencies
+Note: This is a learning and portfolio project. The infrastructure is designed to demonstrate production-oriented Terraform and Azure practices, but it should not be considered a production-ready reference architecture without additional requirements, security controls, monitoring, governance, and environment-specific validation.
 
-I hold several advanced Microsoft certifications that validate my expertise in cloud architecture, network engineering, and cybersecurity:
+🎯 Project Objectives
+This project focuses on applying Terraform concepts to real Azure infrastructure, including:
 
-*   **SC-100:** [Microsoft Cybersecurity Architect Expert](https://learn.microsoft.com/api/credentials/share/en-us/MatheusLuizSaitoSoaresProdutivit-1442/844CFB8BF43D56AC?sharingId=AA351E191EB9C826)
-*   **AZ-305:** [Azure Solutions Architect Expert](https://learn.microsoft.com/api/credentials/share/en-us/MatheusLuizSaitoSoaresProdutivit-1442/746029FACFAAC01F?sharingId=AA351E191EB9C826)
-*   **AZ-700:** [Azure Network Engineer Associate](https://learn.microsoft.com/api/credentials/share/en-us/MatheusLuizSaitoSoaresProdutivit-1442/8B524359138DD108?sharingId=AA351E191EB9C826)
-*   **SC-200:** [Microsoft Security Operations Analyst](https://learn.microsoft.com/api/credentials/share/en-us/MatheusLuizSaitoSoaresProdutivit-1442/30BDE4437B437812?sharingId=AA351E191EB9C826)
+Infrastructure provisioning using Terraform and HCL
+Reusable Terraform modules
+Separation of infrastructure components and state
+Remote Terraform state using Azure Storage
+Resource dependencies through Terraform outputs and terraform_remote_state
+Azure networking and network security
+Load balancing and highly available infrastructure patterns
+Identity and access management
+Infrastructure automation through CI/CD
+Secure handling of credentials and sensitive configuration
+Where the AWS and Azure implementations differ, I adapt the architecture rather than attempting a direct resource-for-resource translation.
 
-**Core Technical Competencies:**
-*   **Infrastructure as Code (IaC):** Terraform (HCL), Azure Bicep, ARM Templates, State Management, CI/CD Pipelines (GitHub Actions/Azure DevOps).
-*   **Cloud Architecture:** Hub & Spoke topologies, High Availability (HA), Disaster Recovery (DR), Well-Architected Framework.
-*   **Network Security:** Azure Firewall, Application Gateway (WAF), Network Security Groups (NSGs), Private Link/Endpoints, ExpressRoute.
-*   **Identity & Threat Protection:** Microsoft Entra ID (formerly Azure AD), RBAC, Microsoft Defender for Cloud, Microsoft Sentinel.
+🏗️ Architecture
+The repository progressively builds Azure infrastructure while following the concepts introduced throughout Terraform: Up & Running, 3rd Edition.
 
----
+Examples may include Azure resources and services such as:
 
-## 📂 Project Directory (Portfolio Demos)
+Azure Resource Groups
+Virtual Networks and Subnets
+Network Security Groups
+Azure Load Balancer
+Virtual Machines / Virtual Machine Scale Sets
+Azure Storage Accounts
+Azure Blob Storage for Terraform remote state
+Microsoft Entra ID
+Azure RBAC
+The implementations evolve as new Terraform concepts are introduced in the book.
 
-Below is an index of the technical demonstrations available in this repository. Click on any project to view its specific `README.md`, architectural diagrams, and Terraform source code.
+🔄 Translating AWS Concepts to Azure
+One of the main goals of this project is understanding the architectural concept behind each implementation rather than simply translating Terraform resource names.
 
-| Project Name | Description | Technologies Highlighted |
-| :--- | :--- | :--- |
-| [**1. Secure Hub & Spoke Architecture**](./01-secure-hub-spoke) | Deployment of a scalable Hub & Spoke network topology with centralized firewall routing and inspection. | `Terraform`, `Azure Firewall`, `VNet Peering`, `UDRs` |
-| [**2. Private AKS Cluster Deployment**](./02-private-aks) | Securing Azure Kubernetes Service with a Hub-and-Spoke network topology, private cluster configuration, centralized Azure Firewall egress inspection, and Managed Identity RBAC for Private DNS zone management. | `Terraform`, `AKS`, `RBAC` |
-| [**3. Defender for Cloud & Sentinel Setup**](./03-defender-sentinel) | *[Future Deployment]* Automated deployment of Log Analytics Workspaces, Sentinel enablement, and Defender coverage. | `Terraform`, `Sentinel`, `Defender for Cloud` |
-| [**4. Secure Web App with WAF**](./04-secure-webapp) | *[Future Deployment]* Deploying an App Service behind an Application Gateway with Web Application Firewall enabled. | `Terraform`, `App Gateway`, `App Service` |
-| [**5. Policy Management with Policy Initiatives**](./05-policy-management) | Defining policies for audit and restrict purposes. | `Terraform`, `Azure Policy`, `Policy Initiatives` |
+For example:
 
-*(Note to Reviewer: Each subfolder contains instructions on how to initialize, plan, and apply the Terraform configurations, along with the required prerequisites).*
+Concept	AWS	Azure
+Virtual network	VPC	Virtual Network (VNet)
+Network segmentation	Subnet	Subnet
+Traffic filtering	Security Group	Network Security Group (NSG)
+Layer 4 load balancing	Network Load Balancer	Azure Load Balancer
+Object storage	Amazon S3	Azure Blob Storage
+Terraform remote state	S3	Azure Storage Account / Blob Container
+Identity and permissions	AWS IAM	Microsoft Entra ID / Azure RBAC
+This makes the repository an exercise not only in Terraform, but also in translating cloud architecture patterns between providers.
 
----
+🔐 Terraform State & Security
+Terraform state can contain infrastructure metadata and potentially sensitive information, so state management is treated as an important part of the architecture.
 
-## 💡 Why This Approach?
+The project uses Azure Blob Storage as a remote Terraform backend, allowing state to be stored separately from the source code and shared between Terraform configurations where required.
 
-In real-world enterprise environments, security must be "shift-left" and embedded directly into the deployment pipelines. By utilizing Terraform, I ensure that every environment is:
-1.  **Immutable & Reproducible:** Eliminating configuration drift.
-2.  **Secure by Default:** Adhering to Zero Trust principles from the first line of code.
-3.  **Auditable:** All infrastructure changes are version-controlled and peer-reviewed.
+Security considerations include:
+
+Keeping Terraform state outside the Git repository
+Avoiding hard-coded credentials
+Using environment variables or workload identities where appropriate
+Applying Azure RBAC to infrastructure resources
+Restricting network access where applicable
+Keeping provider and Terraform configuration versioned
+📁 Repository Structure
+.
+├── 00-bootstrap/
+│   └── ...
+├── modules/
+│   └── ...
+├── environments/
+│   └── ...
+└── README.md
 
 ---
 
