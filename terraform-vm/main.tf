@@ -1,3 +1,7 @@
+data "azurerm_client_config" "current" {}
+
+data "azurerm_subscription" "current" {}
+
 data "azurerm_user_assigned_identity" "terraform_vm" {
     name                = "id-terraform-workstation"
     resource_group_name = "ssh-vault-rg"
@@ -43,12 +47,12 @@ resource "azurerm_network_interface" "tf_vm_nic" {
 	ip_configuration {
 		name				= "TerraformPrivateIP"
 		subnet_id			= azurerm_subnet.tf_vm_subnet.id
-		private_ip_address_location	= "Dynamic"
+		private_ip_address_allocation	= "Dynamic"
 	}
 }
 
 resource "azurerm_linux_virtual_machine" "tf_vm" {
-	name			= "vm-${var.tf_vm_rg_prefix}-${var.tf_vm_rg_location}"
+	name			= "vm-${var.tf_vm_prefix}-${var.tf_vm_rg_location}"
 	resource_group_name	= azurerm_resource_group.tf_vm_rg.name
 	location		= var.tf_vm_rg_location
 	size			= "Standard_B2ats_v2"
@@ -70,17 +74,14 @@ resource "azurerm_linux_virtual_machine" "tf_vm" {
 		]
 	}
 
-	data "azurerm_client_config" "current" {}
-	data "azurerm_subscription" "current" {}
+	custom_data = base64encode(templatefile("${path.module}/cloud-init.yaml", {
+		managed_identity_client_id 	= data.azurerm_user_assigned_identity.terraform_vm.client_id
+		subscription_id			= data.azurerm_subscription.current.subscription_id
+		tenant_id			= data.azurerm_client_config.current.tenant_id
 
-	custom_data = base64encode(file("${path.module}/cloud-init.yaml", {
-		managed_identity_client_id 	= data.azurerm_user_ssigned_identity.terraform_vm.client_id,
-		subscription_id			= data.azurerm_subscription.current.subscription_id,
-		tenant_id			= data.azurerm_client_config.current.tenant_id,
-
-		key_vault_name	= "github-kv-default",
-		git_name	= "msaito777",
-		git_email	= "matheus.saito0201@gmail.com",
+		key_vault_name	= "github-kv-default"
+		git_name	= "msaito777"
+		git_email	= "matheus.saito0201@gmail.com"
 		github_repo	= "git@github.com:msaito-code/terraform.git"
 	}))
 
