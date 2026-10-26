@@ -73,16 +73,16 @@ resource "azurerm_linux_virtual_machine" "tf_vm" {
 	data "azurerm_client_config" "current" {}
 	data "azurerm_subscription" "current" {}
 
-	custom_data = base64encode(file("${path.module}/cloud-init.yaml",
-		managed_identity_client_id 	= data.azurerm_user_ssigned_identity.terraform_vm.client_id
-		subscription_id			= data.azurerm_subscription.current.subscription_id
-		tenant_id			= data.azurerm_client_config.current.tenant_id
+	custom_data = base64encode(file("${path.module}/cloud-init.yaml", {
+		managed_identity_client_id 	= data.azurerm_user_ssigned_identity.terraform_vm.client_id,
+		subscription_id			= data.azurerm_subscription.current.subscription_id,
+		tenant_id			= data.azurerm_client_config.current.tenant_id,
 
-		key_vault_name	= "github-kv-default"
-		git_name	= "msaito777"
-		git_email	= "matheus.saito0201@gmail.com"
+		key_vault_name	= "github-kv-default",
+		git_name	= "msaito777",
+		git_email	= "matheus.saito0201@gmail.com",
 		github_repo	= "git@github.com:msaito-code/terraform.git"
-	))
+	}))
 
 	os_disk {
 		name			="osdisk-${var.tf_vm_prefix}-${var.tf_vm_rg_location}"
