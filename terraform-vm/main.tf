@@ -98,3 +98,26 @@ resource "azurerm_linux_virtual_machine" "tf_vm" {
 		version	  = "latest"
 	}
 }
+
+resource "azurerm_network_security_group" "tf_vm_snet_nsg" {
+	name			= "nsg-${var.tf_vm_prefix}"
+	resource_group_name	= azurerm_resource_group.tf_vm_rg.name
+	location		= var.tf_vm_rg_location
+	
+	security_rule {
+		name			= "Allow-SSH"
+		priority		= 100
+		direction		= "Inbound"
+		access			= "Allow"
+		protocol		= "Tcp"
+		source_port_range	= "*"
+		destination_port_range	= "22"
+		source_address_prefix	= "Internet"
+		destination_address_prefix = "*"
+	}
+}
+
+resource "azurerm_subnet_network_security_group_association" "tf_vm_sb_nsg" {
+	subnet_id	= azurerm_subnet.tf_vm_subnet.id
+	network_security_group_id	= azurerm_network_security_group.tf_vm_snet_nsg.id
+}
