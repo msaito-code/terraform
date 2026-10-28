@@ -36,7 +36,7 @@ resource "azurerm_public_ip" "tf_vm_pip" {
 	resource_group_name	= azurerm_resource_group.tf_vm_rg.name
 	location		= var.tf_vm_rg_location
 	allocation_method	= "Static"
-	sku			= "Basic"
+	sku			= "Standard"
 }
 
 resource "azurerm_network_interface" "tf_vm_nic" {
@@ -48,6 +48,7 @@ resource "azurerm_network_interface" "tf_vm_nic" {
 		name				= "TerraformPrivateIP"
 		subnet_id			= azurerm_subnet.tf_vm_subnet.id
 		private_ip_address_allocation	= "Dynamic"
+		public_ip_address_id			= azurerm_public_ip.tf_vm_pip.id
 	}
 }
 
