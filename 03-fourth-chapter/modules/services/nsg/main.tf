@@ -1,17 +1,6 @@
-data "terraform_remote_state" "vnet_state" {
-        backend = "azurerm"
-
-        config = {
-                storage_account_name    = "tfstateclustersteastus"
-                container_name          = "tfstate-cluster-container"
-                key                     = "cluster_vnet.terraform.tfstate"
-		use_azuread_auth	= true
-        }
-}
-
 resource "azurerm_network_security_group" "cluster_nsg" {
 	name			= "${var.resource_prefix}-vmss-nsg"
-	resource_group_name	= data.terraform_remote_state.vnet_state.outputs.cluster_rg_name
+	resource_group_name	= var.cluster_rg_name
 	location		= var.resource_region
 
 
@@ -46,6 +35,6 @@ resource "azurerm_network_security_group" "cluster_nsg" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "cluster_nsg_assoc" {
-	subnet_id			= data.terraform_remote_state.vnet_state.outputs.cluster_private_subnet_id
+	subnet_id			= var.cluster_private_subnet_id
 	network_security_group_id 	= azurerm_network_security_group.cluster_nsg.id
 }
