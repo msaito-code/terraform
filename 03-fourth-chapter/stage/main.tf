@@ -50,3 +50,18 @@ module "webcluster_settings" {
     admin_password = local.admin_password
     cluster_be_pool_id = local.cluster_be_pool_id
 }
+
+resource "azurerm_network_security_rule" "nsg-allow-https" {
+	name		= "Allow-HTTPS"
+	priority	= 120
+	direction	= "Inbound"
+	access		= "Allow"
+	protocol	= "*"
+	source_port_range	= "*"
+	destination_port_range	= "443"
+	source_address_prefix	= "Internet"
+	destination_address_prefix = "*"
+
+	resource_group_name = module.vnet_settings.cluster_rg_name
+	network_security_group_name = module.nsg_settings.nsg_name
+}
