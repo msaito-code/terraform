@@ -34,6 +34,21 @@ resource "azurerm_network_security_rule" "nsg-allow-lb-probe" {
 	network_security_group_name = azurerm_network_security_group.cluster_nsg.name
 }
 
+resource "azurerm_network_security_rule" "nsg-allow-https" {
+	name		= "Allow-HTTPS"
+	priority	= 120
+	direction	= "Inbound"
+	access		= "Allow"
+	protocol	= "*"
+	source_port_range	= "*"
+	destination_port_range	= "443"
+	source_address_prefix	= "Internet"
+	destination_address_prefix = "*"
+
+	resource_group_name = azurerm_network_security_group.cluster_nsg.resource_group_name
+	network_security_group_name = azurerm_network_security_group.cluster_nsg.name
+}
+
 resource "azurerm_subnet_network_security_group_association" "cluster_nsg_assoc" {
 	subnet_id			= var.cluster_private_subnet_id
 	network_security_group_id 	= azurerm_network_security_group.cluster_nsg.id

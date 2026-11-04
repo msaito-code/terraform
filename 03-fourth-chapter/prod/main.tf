@@ -12,10 +12,41 @@ provider "azurerm" {
 }
 
 module "vnet_settings" {
-    source = "../../03-fourth-chapter/modules/services/vnet"
+    source = "../../03-fourth-chapter/modules/services/vnet?ref=v0.0.1"
 
-    resource_region = "eastus"
-    resource_prefix = "ubu-cluster-prod"
-    vnet_address_space = "10.1.0.0/16"
-    snet_address_prefix = "10.1.0.0/24"
+    resource_region = local.resource_region
+    resource_prefix = local.resource_prefix
+    vnet_address_space = local.vnet_address_space
+    snet_address_prefix = local.snet_address_prefix
+}
+
+module "lb_settings" {
+    source = "../../03-fourth-chapter/modules/services/lb?ref=v0.0.1"
+
+    resource_region = local.resource_region
+    resource_prefix = local.resource_prefix
+    
+    cluster_rg_name = local.cluster_rg_name
+    cluster_fe_lb_pip_id = local.cluster_fe_lb_pip_id
+}
+
+module "nsg_settings" {
+    source = "../../03-fourth-chapter/modules/services/nsg?ref=v0.0.1"
+
+    resource_region = local.resource_region
+    resource_prefix = local.resource_prefix
+    cluster_rg_name = local.cluster_rg_name
+    cluster_private_subnet_id = local.cluster_private_subnet_id
+}
+
+module "webcluster_settings" {
+    source = "../../03-fourth-chapter/modules/services/webserver-cluster?ref=v0.0.1"
+
+    resource_region = local.resource_region
+    resource_prefix = local.resource_prefix
+    cluster_rg_name = local.cluster_rg_name
+    cluster_private_subnet_id = local.cluster_private_subnet_id
+    admin_username = local.admin_password
+    admin_password = local.admin_password
+    cluster_be_pool_id = local.cluster_be_pool_id
 }

@@ -12,7 +12,7 @@ provider "azurerm" {
 }
 
 module "vnet_settings" {
-    source = "../../03-fourth-chapter/modules/services/vnet"
+    source = "../../03-fourth-chapter/modules/services/vnet?ref=v0.0.2"
 
     resource_region = local.resource_region
     resource_prefix = local.resource_prefix
@@ -21,7 +21,7 @@ module "vnet_settings" {
 }
 
 module "lb_settings" {
-    source = "../../03-fourth-chapter/modules/services/lb"
+    source = "../../03-fourth-chapter/modules/services/lb?ref=v0.0.2"
 
     resource_region = local.resource_region
     resource_prefix = local.resource_prefix
@@ -31,7 +31,7 @@ module "lb_settings" {
 }
 
 module "nsg_settings" {
-    source = "../../03-fourth-chapter/modules/services/nsg"
+    source = "../../03-fourth-chapter/modules/services/nsg?ref=v0.0.2"
 
     resource_region = local.resource_region
     resource_prefix = local.resource_prefix
@@ -40,7 +40,7 @@ module "nsg_settings" {
 }
 
 module "webcluster_settings" {
-    source = "../../03-fourth-chapter/modules/services/webserver-cluster"
+    source = "../../03-fourth-chapter/modules/services/webserver-cluster?ref=v0.0.2"
 
     resource_region = local.resource_region
     resource_prefix = local.resource_prefix
@@ -49,19 +49,4 @@ module "webcluster_settings" {
     admin_username = local.admin_password
     admin_password = local.admin_password
     cluster_be_pool_id = local.cluster_be_pool_id
-}
-
-resource "azurerm_network_security_rule" "nsg-allow-https" {
-	name		= "Allow-HTTPS"
-	priority	= 120
-	direction	= "Inbound"
-	access		= "Allow"
-	protocol	= "*"
-	source_port_range	= "*"
-	destination_port_range	= "443"
-	source_address_prefix	= "Internet"
-	destination_address_prefix = "*"
-
-	resource_group_name = module.vnet_settings.cluster_rg_name
-	network_security_group_name = module.nsg_settings.nsg_name
 }
