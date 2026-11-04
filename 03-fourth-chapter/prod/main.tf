@@ -12,7 +12,7 @@ provider "azurerm" {
 }
 
 module "vnet_settings" {
-    source = "../../03-fourth-chapter/modules/services/vnet?ref=v0.0.1"
+    source = "github.com/msaito-code/terraform/03-fourth-chapter/modules/services/vnet?ref=v0.0.1"
 
     resource_region = local.resource_region
     resource_prefix = local.resource_prefix
@@ -21,7 +21,7 @@ module "vnet_settings" {
 }
 
 module "lb_settings" {
-    source = "../../03-fourth-chapter/modules/services/lb?ref=v0.0.1"
+    source = "github.com/msaito-code/terraform/03-fourth-chapter/modules/services/lb?ref=v0.0.1"
 
     resource_region = local.resource_region
     resource_prefix = local.resource_prefix
@@ -31,7 +31,7 @@ module "lb_settings" {
 }
 
 module "nsg_settings" {
-    source = "../../03-fourth-chapter/modules/services/nsg?ref=v0.0.1"
+    source = "github.com/msaito-code/terraform/03-fourth-chapter/modules/services/nsg?ref=v0.0.1"
 
     resource_region = local.resource_region
     resource_prefix = local.resource_prefix
@@ -40,7 +40,7 @@ module "nsg_settings" {
 }
 
 module "webcluster_settings" {
-    source = "../../03-fourth-chapter/modules/services/webserver-cluster?ref=v0.0.1"
+    source = "github.com/msaito-code/terraform/03-fourth-chapter/modules/services/webserver-cluster?ref=v0.0.1"
 
     resource_region = local.resource_region
     resource_prefix = local.resource_prefix
