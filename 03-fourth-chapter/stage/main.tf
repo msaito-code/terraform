@@ -12,7 +12,7 @@ provider "azurerm" {
 }
 
 module "vnet_settings" {
-    source = "github.com/msaito-code/terraform/03-fourth-chapter/modules/services/vnet?ref=v0.0.2"
+    source = "github.com/msaito-code/terraform/03-fourth-chapter/modules/services/vnet?ref=v0.0.3"
 
     resource_region = local.resource_region
     resource_prefix = local.resource_prefix
@@ -21,7 +21,7 @@ module "vnet_settings" {
 }
 
 module "lb_settings" {
-    source = "github.com/msaito-code/terraform/03-fourth-chapter/modules/services/lb?ref=v0.0.2"
+    source = "github.com/msaito-code/terraform/03-fourth-chapter/modules/services/lb?ref=v0.0.3"
 
     resource_region = local.resource_region
     resource_prefix = local.resource_prefix
@@ -31,7 +31,7 @@ module "lb_settings" {
 }
 
 module "nsg_settings" {
-    source = "github.com/msaito-code/terraform/03-fourth-chapter/modules/services/nsg?ref=v0.0.2"
+    source = "github.com/msaito-code/terraform/03-fourth-chapter/modules/services/nsg?ref=v0.0.3"
 
     resource_region = local.resource_region
     resource_prefix = local.resource_prefix
@@ -40,13 +40,13 @@ module "nsg_settings" {
 }
 
 module "webcluster_settings" {
-    source = "github.com/msaito-code/terraform/03-fourth-chapter/modules/services/webserver-cluster?ref=v0.0.2"
+    source = "github.com/msaito-code/terraform/03-fourth-chapter/modules/services/webserver-cluster?ref=v0.0.3"
 
     resource_region = local.resource_region
     resource_prefix = local.resource_prefix
     cluster_rg_name = local.cluster_rg_name
     cluster_private_subnet_id = local.cluster_private_subnet_id
-    admin_username = local.admin_password
+    admin_username = local.admin_username
     admin_password = local.admin_password
     cluster_be_pool_id = local.cluster_be_pool_id
 }
