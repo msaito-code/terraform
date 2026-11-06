@@ -17,4 +17,8 @@ module "user_ids" {
 
     for_each = toset(var.usernames)
     users = each.value
+    id_tags = {
+        key = "Role",
+        value = each.value
+    }
 }
